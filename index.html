@@ -3,13 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Ziel-Tracker Embed</title>
+  <title>Core Pillars Embed</title>
   <style>
     :root {
+      --bg: #010406;
       --panel: rgba(2, 8, 11, 0.96);
+      --card: linear-gradient(180deg, rgba(3,11,14,0.98), rgba(2,8,11,0.98));
       --cyan: #00e7ff;
-      --text: #e6fcff;
-      --border: rgba(0, 231, 255, 0.22);
+      --text: #e8fbff;
+      --muted: #8cbec5;
+      --border: rgba(0, 231, 255, 0.18);
+      --input: rgba(0,0,0,0.24);
     }
 
     * { box-sizing: border-box; }
@@ -19,7 +23,7 @@
       min-height: 100%;
       font-family: Inter, Arial, sans-serif;
       background:
-        radial-gradient(circle at top left, rgba(0,231,255,0.08), transparent 22%),
+        radial-gradient(circle at top left, rgba(0,231,255,0.07), transparent 22%),
         linear-gradient(180deg, #010406 0%, #02080b 100%);
       color: var(--text);
     }
@@ -27,11 +31,11 @@
     body { padding: 6px; }
 
     .hud {
-      width: min(980px, 100%);
+      width: min(1180px, 100%);
       margin: 0 auto;
       background: var(--panel);
-      border: 1px solid var(--border);
-      box-shadow: 0 0 14px rgba(0, 231, 255, 0.06), inset 0 0 10px rgba(0, 231, 255, 0.03);
+      border: 1px solid rgba(0,231,255,0.2);
+      box-shadow: 0 0 14px rgba(0,231,255,0.05), inset 0 0 10px rgba(0,231,255,0.025);
       position: relative;
       overflow: hidden;
     }
@@ -40,19 +44,19 @@
       content: "";
       position: absolute;
       inset: 0;
-      background-image: radial-gradient(rgba(0,231,255,0.1) 0.7px, transparent 0.7px);
+      background-image: radial-gradient(rgba(0,231,255,0.09) 0.7px, transparent 0.7px);
       background-size: 14px 14px;
-      opacity: 0.14;
+      opacity: 0.12;
       pointer-events: none;
     }
 
     .scanline {
       position: absolute;
       inset: 0;
-      background: linear-gradient(to bottom, transparent 0%, rgba(0,231,255,0.035) 50%, transparent 100%);
+      background: linear-gradient(to bottom, transparent 0%, rgba(0,231,255,0.03) 50%, transparent 100%);
       background-size: 100% 8px;
       mix-blend-mode: screen;
-      opacity: 0.14;
+      opacity: 0.12;
       pointer-events: none;
     }
 
@@ -62,7 +66,7 @@
       left: -35%;
       width: 35%;
       height: 100%;
-      background: linear-gradient(90deg, transparent, rgba(0,231,255,0.06), transparent);
+      background: linear-gradient(90deg, transparent, rgba(0,231,255,0.05), transparent);
       transform: skewX(-20deg);
       animation: sweep 10s linear infinite;
       pointer-events: none;
@@ -74,14 +78,14 @@
     }
 
     .header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      padding: 9px 12px;
-      border-bottom: 1px solid var(--border);
       position: relative;
       z-index: 1;
+      padding: 10px 12px 9px;
+      border-bottom: 1px solid rgba(0,231,255,0.14);
+      display: flex;
+      align-items: end;
+      justify-content: space-between;
+      gap: 12px;
     }
 
     .eyebrow {
@@ -102,67 +106,86 @@
     }
 
     .status {
-      color: var(--cyan);
+      color: var(--muted);
       font-size: 10px;
       text-transform: uppercase;
       letter-spacing: 0.16em;
       white-space: nowrap;
-      opacity: 0.8;
     }
 
     .content {
-      padding: 10px;
+      position: relative;
+      z-index: 1;
       display: grid;
       grid-template-columns: repeat(3, minmax(0, 1fr));
       gap: 10px;
-      position: relative;
-      z-index: 1;
+      padding: 10px;
       align-items: start;
     }
 
-    .goal-card {
-      background: linear-gradient(180deg, rgba(3,11,14,0.98), rgba(2,8,11,0.98));
-      border: 1px solid rgba(0,231,255,0.18);
-      padding: 10px;
-      position: relative;
-      overflow: hidden;
-      box-shadow: inset 0 0 10px rgba(0,231,255,0.025);
+    .pillar {
+      background: var(--card);
+      border: 1px solid var(--border);
+      padding: 12px;
       min-width: 0;
+      position: relative;
+      box-shadow: inset 0 0 10px rgba(0,231,255,0.02);
     }
 
-    .goal-card::after {
+    .pillar::after {
       content: "";
       position: absolute;
       inset: auto 0 0 0;
       height: 1px;
-      background: linear-gradient(90deg, transparent, rgba(0,231,255,0.55), transparent);
+      background: linear-gradient(90deg, transparent, rgba(0,231,255,0.45), transparent);
       opacity: 0.7;
     }
 
-    .goal-title {
+    .pillar-title {
+      color: var(--cyan);
       font-size: 14px;
       font-weight: 800;
-      color: var(--cyan);
-      text-transform: uppercase;
       letter-spacing: 0.16em;
-      text-shadow: 0 0 8px rgba(0,231,255,0.16);
-      margin-bottom: 8px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+      text-shadow: 0 0 8px rgba(0,231,255,0.14);
+    }
+
+    .label {
+      color: #6fc9d2;
+      font-size: 10px;
+      letter-spacing: 0.16em;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .year-goal {
+      color: white;
+      font-size: 13px;
+      line-height: 1.45;
+      margin-bottom: 12px;
+      min-height: 76px;
+      opacity: 0.95;
+    }
+
+    .input-wrap + .input-wrap {
+      margin-top: 10px;
     }
 
     .goal-text {
       width: 100%;
-      background: rgba(0,0,0,0.26);
-      border: 1px solid rgba(0,231,255,0.18);
+      background: var(--input);
+      border: 1px solid rgba(0,231,255,0.16);
       color: white;
-      padding: 8px 9px;
+      padding: 9px 10px;
       font-size: 13px;
       outline: none;
       transition: border-color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
     }
 
     .goal-text:focus {
-      border-color: rgba(0,231,255,0.5);
-      box-shadow: 0 0 0 1px rgba(0,231,255,0.16), 0 0 12px rgba(0,231,255,0.06);
+      border-color: rgba(0,231,255,0.42);
+      box-shadow: 0 0 0 1px rgba(0,231,255,0.14), 0 0 12px rgba(0,231,255,0.05);
       transform: translateY(-1px);
     }
 
@@ -170,76 +193,18 @@
       color: #79b9c1;
     }
 
-    .progress {
-      position: relative;
-      width: 100%;
-      height: 12px;
-      margin-top: 10px;
-      background: rgba(0,0,0,0.45);
-      border: 1px solid rgba(0,231,255,0.16);
-      overflow: hidden;
-    }
-
-    .progress::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: repeating-linear-gradient(
-        90deg,
-        transparent 0,
-        transparent 13px,
-        rgba(0,231,255,0.05) 13px,
-        rgba(0,231,255,0.05) 14px
-      );
-      pointer-events: none;
-    }
-
-    .bar {
-      position: relative;
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, #10ffc8, #36ffd9);
-      box-shadow: 0 0 10px rgba(0,231,255,0.25);
-      transition: width 0.35s ease;
-    }
-
-    .bar::after {
-      content: "";
-      position: absolute;
-      top: 0;
-      right: -30px;
-      width: 30px;
-      height: 100%;
-      background: linear-gradient(90deg, rgba(255,255,255,0), rgba(255,255,255,0.55), rgba(255,255,255,0));
-      animation: shimmer 2s linear infinite;
-      opacity: 0.55;
-    }
-
-    @keyframes shimmer {
-      0% { transform: translateX(-8px); opacity: 0; }
-      20% { opacity: 0.7; }
-      100% { transform: translateX(22px); opacity: 0; }
-    }
-
-    .footer {
-      padding: 0 12px 10px;
-      font-size: 10px;
-      color: #5fa4ab;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      position: relative;
-      z-index: 1;
-    }
-
-    @media (max-width: 720px) {
-      body { padding: 4px; }
-      .header { padding: 9px 11px; }
+    @media (max-width: 860px) {
       .content {
-        padding: 10px;
         grid-template-columns: 1fr;
       }
-      .goal-title { font-size: 14px; }
-      .status { display: none; }
+
+      .year-goal {
+        min-height: 0;
+      }
+
+      .status {
+        display: none;
+      }
     }
   </style>
 </head>
@@ -250,86 +215,95 @@
 
     <div class="header">
       <div>
-        <div class="eyebrow">System.Goals.v4</div>
-        <h1>Status Profile</h1>
+        <div class="eyebrow">System.Core.Pillars</div>
+        <h1>Year Targets</h1>
       </div>
-      <div class="status">Goal Sync Active</div>
+      <div class="status">3 Pillars Active</div>
     </div>
 
     <div class="content">
-      <section class="goal-card" data-goal="week">
-        <div class="goal-title">Wochenziel</div>
-        <input class="goal-text" id="weekText" value="3/5 Zeichnungen" placeholder="z. B. 5/7 Trainings oder 3/5 Zeichnungen" />
+      <section class="pillar">
+        <div class="pillar-title">Fitness</div>
+        <div class="label">Jahresziel</div>
+        <div class="year-goal">140 kg oder weniger bis zum 31.12. erreichen und meine Belastbarkeit deutlich steigern.</div>
+
+        <div class="input-wrap">
+          <div class="label">Wochenziel</div>
+          <input class="goal-text" id="sportWeek" value="3x Training + Ernährung sauber halten" placeholder="Wochenziel" />
+        </div>
+
+        <div class="input-wrap">
+          <div class="label">Monatsziel</div>
+          <input class="goal-text" id="sportMonth" value="4 kg runter / 12 Trainings" placeholder="Monatsziel" />
+        </div>
       </section>
 
-      <section class="goal-card" data-goal="month">
-        <div class="goal-title">Monatsziel</div>
-        <input class="goal-text" id="monthText" value="8/20 Sporteinheiten" placeholder="z. B. 12/20 Sporteinheiten oder 4/8 Werke" />
+      <section class="pillar">
+        <div class="pillar-title">Arbeit</div>
+        <div class="label">Jahresziel</div>
+        <div class="year-goal">250k Gewinn bis zum 31.12. erreichen und mindestens eine Säule signifikant ausbauen oder neu aufbauen.</div>
+
+        <div class="input-wrap">
+          <div class="label">Wochenziel</div>
+          <input class="goal-text" id="workWeek" value="3 starke Sales-Aktionen / 1 Ausbau-Schritt" placeholder="Wochenziel" />
+        </div>
+
+        <div class="input-wrap">
+          <div class="label">Monatsziel</div>
+          <input class="goal-text" id="workMonth" value="20k+ Gewinn / klare Struktur für eine neue Säule" placeholder="Monatsziel" />
+        </div>
       </section>
 
-      <section class="goal-card" data-goal="year">
-        <div class="goal-title">Jahresziel</div>
-        <input class="goal-text" id="yearText" value="40/100 Trainings" placeholder="z. B. 40/100 Trainings oder 2/5 große Projekte" />
+      <section class="pillar">
+        <div class="pillar-title">Kreatives</div>
+        <div class="label">Jahresziel</div>
+        <div class="year-goal">ArtSchool bis zum 31.12. mindestens bis Term 6 durchziehen und meine Ideen deutlich besser aufs Papier bringen.</div>
+
+        <div class="input-wrap">
+          <div class="label">Wochenziel</div>
+          <input class="goal-text" id="creativeWeek" value="4 Sessions ArtSchool / 2 Ideen sauber ausarbeiten" placeholder="Wochenziel" />
+        </div>
+
+        <div class="input-wrap">
+          <div class="label">Monatsziel</div>
+          <input class="goal-text" id="creativeMonth" value="Term konsistent durchziehen / Zeichenqualität sichtbar steigern" placeholder="Monatsziel" />
+        </div>
       </section>
     </div>
-
-    <div class="footer">Hunter Interface // Compact Goal Embed</div>
   </div>
 
   <script>
-    const goals = ["week", "month", "year"];
-
-    function extractProgress(text) {
-      const match = String(text || "").match(/(\d+)\s*\/\s*(\d+)/);
-      if (!match) return 0;
-      const current = Number(match[1]) || 0;
-      const target = Number(match[2]) || 0;
-      if (target <= 0) return 0;
-      return Math.min(100, Math.round((current / target) * 100));
-    }
-
-    function updateGoal(name) {
-      const text = document.getElementById(`${name}Text`).value || "";
-      const percent = extractProgress(text);
-      document.getElementById(`${name}Bar`).style.width = `${percent}%`;
-      saveState();
-    }
+    const ids = [
+      'sportWeek', 'sportMonth',
+      'workWeek', 'workMonth',
+      'creativeWeek', 'creativeMonth'
+    ];
 
     function saveState() {
       const state = {};
-      goals.forEach(name => {
-        state[name] = {
-          text: document.getElementById(`${name}Text`).value
-        };
+      ids.forEach(id => {
+        state[id] = document.getElementById(id).value;
       });
-      localStorage.setItem("notionGoalEmbedStateCompact", JSON.stringify(state));
+      localStorage.setItem('notionCorePillarsState', JSON.stringify(state));
     }
 
     function loadState() {
-      const raw = localStorage.getItem("notionGoalEmbedStateCompact");
-      if (!raw) {
-        goals.forEach(updateGoal);
-        return;
-      }
-
+      const raw = localStorage.getItem('notionCorePillarsState');
+      if (!raw) return;
       try {
         const state = JSON.parse(raw);
-        goals.forEach(name => {
-          if (state[name]?.text) {
-            document.getElementById(`${name}Text`).value = state[name].text;
+        ids.forEach(id => {
+          if (typeof state[id] === 'string') {
+            document.getElementById(id).value = state[id];
           }
-          updateGoal(name);
         });
       } catch (error) {
-        console.error("Konnte gespeicherten State nicht laden:", error);
-        goals.forEach(updateGoal);
+        console.error('Konnte gespeicherten State nicht laden:', error);
       }
     }
 
-    goals.forEach(name => {
-      document.getElementById(`${name}Text`).addEventListener("input", () => {
-        updateGoal(name);
-      });
+    ids.forEach(id => {
+      document.getElementById(id).addEventListener('input', saveState);
     });
 
     loadState();
